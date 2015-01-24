@@ -32,8 +32,11 @@ def xy_dt0(decision_tree,feature_names=None,
                 #If its a leaf then change last condition
                 cur_branch.change_last_condition(False)
             temp = ['__'+str(i+1) for i in temp]
-            if left: return "then: %s  # "  % (temp)
-            else: return "else: %s  #" % (temp)
+            assert len(temp)==1
+            clu = temp[0]
+            mus = [str(int(mu[clu][d])) for d in dep[clu]]
+            if left: return "then: %s  # " % (clu),mus
+            else: return "else: %s  # " % (clu),mus
  
         elif tree.children_left[node_id] != _tree.TREE_LEAF or tree.children_right[node_id] != _tree.TREE_LEAF:
             branches.nodes += 1
@@ -44,9 +47,10 @@ def xy_dt0(decision_tree,feature_names=None,
             
             #add condition at node to current branch
             cur_branch.add_condition(feature,True,tree.threshold[node_id])
+            
             return "if %s <= %.1f:" \
                    % (feature,
-                      tree.threshold[node_id])
+                      tree.threshold[node_id]),[]
             
         else:
             if left:
@@ -66,9 +70,17 @@ def xy_dt0(decision_tree,feature_names=None,
 
         # Add node with description
         if max_depth is None or depth <= max_depth:
-            str = branching(tree, branches, cur_branch, left, node_id, criterion,parent)
+            str,mus = branching(tree, branches, cur_branch, left, node_id, criterion,parent)
             if spy and str:
-                print depth*"|--"+" "+str
+                #print depth*" .."+" "+str
+                if len(mus) == 0:
+                    print depth*' ..'+' '+str
+                else:
+                    pr = [depth*' ..'+' '+str]+mus
+                    print "{0:40} {1}".format(pr[0],
+                                              ' , '.join(pr[1:]))
+                #print rowprint([depth*' ..'+' '+str]+mus,sp=25)
+            
             if left_child != _tree.TREE_LEAF:
                 left = True
                 recurse(tree, branches, cur_branch, left, left_child, criterion=criterion, parent=node_id,
