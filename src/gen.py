@@ -1,6 +1,7 @@
 
 #from xomod import *
 from diff import *
+from properties import *
 import os
 
 def applydiffs(c,col,m,thresh,verbose):
@@ -155,6 +156,17 @@ def genwithdiffs_dtlz(z,
         reader.addRow(i,znew)
     sys.stderr.write("# Table " + znew + " created\n")
     return znew
+
+def genwithdiffs_de(z,
+                    diffs,
+                    model,
+                    output=os.environ["HOME"]+"/tmp/pom",
+                    verbose=False,n=500):
+    import random
+    _a,_b,_c = random.sample(range(0,len(data[z])-1),3)
+    for i in [_a,_b,_c]:
+        print data[z][i][0]
+    
        
 def genwithrange(z,
                  ranges,
@@ -210,9 +222,6 @@ if __name__ == "__main__":
     name = os.path.basename(__file__).split('.')[0]
     get_args(name,args)
     #Read csvfile
-    csvfile = open('../data/'+args['ifile']+'.csv','r')
-    #First table is initialized with name "main"
-    z = "main"
-    reader.readCsv(csvfile,z)
-    chops = [0.25,0.5,0.75,1.0]
-    gen1(z,chops,args['m'])
+    import reader
+    reader.readFromCT()
+    genwithdiffs_de(z,[],args['m'])

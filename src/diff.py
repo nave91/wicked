@@ -1,5 +1,6 @@
 #Module for checking differences between clusters
 #Check diff()
+import os
 import reader
 import properties
 import xy_proj
@@ -7,6 +8,7 @@ from a12 import *
 from stats import *
 from table import *
 from xy_dt import xy_dt
+
 #from gen import *
 sys.do_not_write_bytecode = True
 
@@ -28,7 +30,7 @@ class Diff:
         return ">diff for: "+str(self.worse)+\
             " is: "+str(self.diffs)+" <"
 
-def bettercheck(one,two,verbose = False):
+def bettercheck(one,two,verbose = True):
     #both tests passed, similar
     better,similar,worse = 0,0,0
     for fea in dep[one]:
@@ -178,6 +180,7 @@ def diff(z,args,model=args['m'],verbose=False,checkeach=False):
         scores[zs] = 0
     for one in zlst[1:]:
         for two in zlst[1:]:
+            print "hellllllloooo>>>>>>>>>>>>>>>>>>>>"
             if one != two:
                 if bettercheck(one,two):
                     if one in scores: scores[one] += 1
@@ -250,10 +253,9 @@ if __name__ == "__main__":
     name = os.path.basename(__file__).split('.')[0]
     properties.get_args(name,args)
     #Read csvfile
-    csvfile = open('../data/'+args['ifile']+'.csv','r')
-    #First table is initialized with name "main"
-    z = "main"
-    reader.readCsv(csvfile,z)
+    reader.readFromCT()
+    differs,C2zlst,zlst = diff(z,args,model=args['m'])
+    sys.exit()
     if args['d']:
         import tshortener
         zlst = xy_proj.xy_proj(z,data,args) 

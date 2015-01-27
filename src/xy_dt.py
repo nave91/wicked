@@ -57,7 +57,7 @@ def xy_dt0(decision_tree,feature_names=None,
                 tree.children_left[parent] = _tree.TREE_LEAF
             else:
                 tree.children_right[parent] = _tree.TREE_LEAF
-            return 
+            return None,[]
 
     def recurse(tree, branches, cur_branch, left, node_id, criterion, parent=None, depth=0, spy=args['spy']):
         
@@ -70,7 +70,9 @@ def xy_dt0(decision_tree,feature_names=None,
 
         # Add node with description
         if max_depth is None or depth <= max_depth:
-            str,mus = branching(tree, branches, cur_branch, left, node_id, criterion,parent)
+            some = branching(tree, branches, cur_branch, left, node_id, criterion,parent)
+            print some
+            str,mus = some
             if spy and str:
                 #print depth*" .."+" "+str
                 if len(mus) == 0:
@@ -143,11 +145,6 @@ if __name__ == "__main__":
     
     #Read csvfile
     csvfile = open(args['ifile'],'r')
-    """
-    #First table is initialized with name "main"
-    z = "main"
-    readCsv(csvfile,z)
-    """
     from xomo import xomo_builder
     header,rows = xomo_builder.builder(csvfile)
     #Use header[:-4] to avoid extra column names in input from jmoo

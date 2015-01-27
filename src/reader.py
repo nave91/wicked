@@ -182,14 +182,28 @@ def copyTable(z,m,verbose):
         print len(data[z]),len(data[m])
         print colname[m]
 
+def readFromCT():
+    #Read csvfile
+    csvfile = open(args['ifile'],'r')
+    from xomo import xomo_builder
+    header,rows = xomo_builder.builder(csvfile)
+    #Use header[:-4] to avoid extra column names in input from jmoo
+    header,rows = xomo_builder.xomo_csvmaker('xomofl',header[:-4],rows,
+                                                         verbose=False)
+    
+    makeTable(header,z)
+    for r in rows: addRow(r,z)
+    
+    csvfile.close()
+    return header,rows
+
 if __name__ == "__main__":
+
     name = os.path.basename(__file__).split('.')[0]
     get_args(name,args)
-    #Read csvfile
-    csvfile = open('CT/'+args['ifile']+'.csv','r')
-    #Main table is initialized as "main"
-    z = "main"
-    readCsv(csvfile,z)
+
+    header,rows = readFromCT()
+    print header
     if args['v']>-1:
         outCsv([z])
     if args['v']>0:

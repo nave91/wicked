@@ -75,7 +75,7 @@ def xomo_csvmaker(model,names,rows,verbose=True):
     header = ['?aa','$sced','$cplx','$site','$resl','$acap',
               '$etat','$rely','$data','$prec','$pmat','$aexp',
               '$flex','$pcon','$tool','$time','$stor','$docu',
-              '?b','$plex','$pcap','$kloc','$ltex','$pr','$ruse',
+              '?b','$plex','$pcap','+kloc','$ltex','$pr','$ruse',
               '$team','$pvol']
     objectives = ['-effort','-months','-defects','-risks']
     import xomo
