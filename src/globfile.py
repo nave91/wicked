@@ -31,7 +31,7 @@ args = {'v' : -1,                      #Verbose
         'bpop': 1000,                  #bootstrap population
         'fayyad': False,               #fayyad disc check
         'objind' : (-1,-1),            #num of deps and indeps for dtlz
-        'repeats': 20
+        'repeats': 1
         }
 #
 #Info for table

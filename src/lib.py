@@ -118,7 +118,6 @@ def pairs(lst):
     return tmp
 
 def anyi(lst):
-    resetSeed(1)
     tmp = random.random()
     return int(tmp*len(lst)) + 1
 
