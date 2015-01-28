@@ -182,20 +182,33 @@ def copyTable(z,m,verbose):
         print len(data[z]),len(data[m])
         print colname[m]
 
-def readFromCT():
+def xomoreadFromCT():
     #Read csvfile
     csvfile = open(args['ifile'],'r')
     from xomo import xomo_builder
     header,rows = xomo_builder.builder(csvfile)
     #Use header[:-4] to avoid extra column names in input from jmoo
-    header,rows = xomo_builder.xomo_csvmaker('xomofl',header[:-4],rows,
-                                                         verbose=False)
+    header,rows = xomo_builder.xomo_csvmaker('xomofl',rows,
+                                             verbose=False)
     
     makeTable(header,z)
     for r in rows: addRow(r,z)
     
     csvfile.close()
     return header,rows
+
+def pomreadFromCT():
+    csvfile = open(args['ifile'],'r')
+    from pom3 import pom3_builder
+    header,rows = pom3_builder.builder(csvfile)
+    #Use header[:-4] to avoid extra column names in input from jmoo
+    header,rows = pom3_builder.pom3_csvmaker(header[:-4],rows,
+                                             verbose=False)
+    makeTable(header,z)
+    for r in rows: addRow(r,z)
+    csvfile.close()
+    return header,rows
+
 
 if __name__ == "__main__":
 

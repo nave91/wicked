@@ -192,8 +192,9 @@ def runner(z,args,esdash,totalsize,Tname,objectives,base=False):
                                            dep,indep,args['i'],args['d'])
             Diffs,betters,zlst,branches = diff(zshort,args,model)
             endtime = time.time() - st
-            from gen import genwithdiffs
-            T3zlst = genwithdiffs(Diffs,betters,model,verbose=False)
+            from gen import genwithdiffs,smartsamples
+            #T3zlst = genwithdiffs(Diffs,betters,model,verbose=False)
+            T3zlst = smartsamples(Diffs,betters,model,verbose=False)
             if len(T3zlst)==1: 
                 print "#"*35,"REPEATING","#"*35
                 _r -= 1
@@ -203,8 +204,9 @@ def runner(z,args,esdash,totalsize,Tname,objectives,base=False):
             # Just plain CT no prune
             Diffs,betters,zlst,branches = diff(z,args,model)
             endtime = time.time() - st
-            from gen import genwithdiffs
-            T3zlst = genwithdiffs(Diffs,betters,model,verbose=False)
+            from gen import genwithdiffs,smartsamples
+            #T3zlst = genwithdiffs(Diffs,betters,model,verbose=False)
+            T3zlst = smartsamples(Diffs,betters,model,verbose=False)
             nodes += branches.nodes
             leaves += branches.leaves
         else:

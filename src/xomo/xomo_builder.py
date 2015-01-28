@@ -71,15 +71,17 @@ def builder(csvfile):
                 seen = True
                 header = lst
 
-def xomo_csvmaker(model,names,rows,verbose=True):
+def xomo_csvmaker(model,rows,verbose=True,names=None):
     header = ['?aa','$sced','$cplx','$site','$resl','$acap',
               '$etat','$rely','$data','$prec','$pmat','$aexp',
               '$flex','$pcon','$tool','$time','$stor','$docu',
               '?b','$plex','$pcap','+kloc','$ltex','$pr','$ruse',
               '$team','$pvol']
+    if names: header = names
     objectives = ['-effort','-months','-defects','-risks']
     import xomo
-    c = xomo.Cocomo("../data/"+str(xomomap[model]))
+    model = xomomap[model] if model in xomomap else model
+    c = xomo.Cocomo("../data/"+str(model))
     bigrows = []
     #clean rows
     for _r,r in enumerate(rows):

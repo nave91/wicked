@@ -30,7 +30,22 @@ class Diff:
         return ">diff for: "+str(self.worse)+\
             " is: "+str(self.diffs)+" <"
 
-def bettercheck(one,two,verbose = True):
+def bettercheck(one,two,verbose=False):
+    
+    def envy(one,two):
+        yes=False
+        for x,y in zip(one,two):
+            if x > y:  yes=True
+            if x < y: return False
+        return yes
+    ones,twos = [],[]
+    for fea in dep[one]:
+        ind = colname[z].index(fea)
+        ones.append(mu[one][fea])
+        twos.append(mu[two][fea])
+    return not envy(ones,twos)
+"""
+def bettercheck(one,two,verbose = False):
     #both tests passed, similar
     better,similar,worse = 0,0,0
     for fea in dep[one]:
@@ -72,7 +87,7 @@ def bettercheck(one,two,verbose = True):
     if verbose: print "b",better,"s",similar,"w",worse
     if better > 0 and worse == 0:
         return True #one is better than two
-
+"""
 
 def closestbetter(cluster,bid,branches,better):
     #returns bid of branch having better cluster 
@@ -180,7 +195,6 @@ def diff(z,args,model=args['m'],verbose=False,checkeach=False):
         scores[zs] = 0
     for one in zlst[1:]:
         for two in zlst[1:]:
-            print "hellllllloooo>>>>>>>>>>>>>>>>>>>>"
             if one != two:
                 if bettercheck(one,two):
                     if one in scores: scores[one] += 1
@@ -195,12 +209,13 @@ def diff(z,args,model=args['m'],verbose=False,checkeach=False):
     worsestuple = scorestuple[int(nb):]
     for i in worsestuple:
         worses.append(i[0])
-    if verbose:
+    if True:
         print scorestuple
         print "better",betters
         print "worse",worses
         print "branches:\n",branches
 
+    sys.exit()
     decs,incs,sames,clus = 0,0,0,0
     outdiffs = []
     C1outzlst = []
@@ -232,7 +247,7 @@ def diff(z,args,model=args['m'],verbose=False,checkeach=False):
                     C2wced = mutate(C2diffs,wcluster,appender) #before mutated
                     majclass_samples = branches.collection[wbid].samples
 
-                    Diffs.append(Diff(C2wced,C2diffs,majclass_samples*10))
+                    Diffs.append(Diff(C2wced,C2diffs,majclass_samples))
                     
     return Diffs,betters,zlst,branches
 
@@ -253,8 +268,8 @@ if __name__ == "__main__":
     name = os.path.basename(__file__).split('.')[0]
     properties.get_args(name,args)
     #Read csvfile
-    reader.readFromCT()
-    differs,C2zlst,zlst = diff(z,args,model=args['m'])
+    reader.pomreadFromCT()
+    print diff(z,args,model=args['m'])
     sys.exit()
     if args['d']:
         import tshortener

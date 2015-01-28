@@ -65,12 +65,17 @@ class Os:
                                               self.collection[n].up),2))
             inp.append(t)
         
-        header,rows = pom3_builder.pom3_csvmaker(self.names,inp,verbose)
+        header,rows = pomrunner(self.names,inp,verbose)
         return header,rows
+
     def __repr__(self):
         return str(self.names)+'\n'+str(self.collection)+'\n'
     def __str__(self):
         return str(self.names)+'\n'+str(self.collection)+'\n'
+
+
+def pomrunner(header,rows,verbose):
+    return pom3_builder.pom3_csvmaker(header,rows,verbose)
 
 def pom3d(N=50):
     os = Os()

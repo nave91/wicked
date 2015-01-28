@@ -4,6 +4,8 @@ if cmd_subfolder not in sys.path:
     sys.path.insert(0, cmd_subfolder)
 
 
+lows = "LOWS"
+ups = "UPS"
 
 import os
 import sys

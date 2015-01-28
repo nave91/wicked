@@ -34,7 +34,7 @@ def xy_dt0(decision_tree,feature_names=None,
             temp = ['__'+str(i+1) for i in temp]
             assert len(temp)==1
             clu = temp[0]
-            mus = [str(int(mu[clu][d])) for d in dep[clu]]
+            mus = [str(round(mu[clu][d],2)) for d in dep[clu]]
             if left: return "then: %s  # " % (clu),mus
             else: return "else: %s  # " % (clu),mus
  
@@ -70,9 +70,7 @@ def xy_dt0(decision_tree,feature_names=None,
 
         # Add node with description
         if max_depth is None or depth <= max_depth:
-            some = branching(tree, branches, cur_branch, left, node_id, criterion,parent)
-            print some
-            str,mus = some
+            str,mus = branching(tree, branches, cur_branch, left, node_id, criterion,parent)
             if spy and str:
                 #print depth*" .."+" "+str
                 if len(mus) == 0:
@@ -143,19 +141,11 @@ if __name__ == "__main__":
     name = os.path.basename(__file__).split('.')[0]
     get_args(name,args)
     
-    #Read csvfile
-    csvfile = open(args['ifile'],'r')
-    from xomo import xomo_builder
-    header,rows = xomo_builder.builder(csvfile)
-    #Use header[:-4] to avoid extra column names in input from jmoo
-    header,rows = xomo_builder.xomo_csvmaker('xomofl',header[:-4],rows,
-                                                         verbose=False)
-    
-    makeTable(header,z)
-    for r in rows: addRow(r,z)
-    
-    csvfile.close()
-    
+    pomreadFromCT()
+
+
+    zlst,branches = xy_dt(z,args)
+    sys.exit()
     args['d'] = True
     args['dtreeprune'] = True
     args['i'] = 0.50
@@ -165,6 +155,7 @@ if __name__ == "__main__":
     zlst = xy_proj(z,data,args) 
     zshort = tshortener.tshortener(z,zlst,colname,data,dep,indep,0.1)
     z = str(zshort)
+    print colname[z],data[z]
     #outCsv([zshort])
     zlst,branches = xy_dt(z,args)
     #tshortener.rebuild_tree(branches,data)

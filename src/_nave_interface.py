@@ -151,6 +151,7 @@ class Interface:
         self.callrunner(Tname,z,args,esdash,
                         totalsize,objectives)
         
+        """
         #CT1 Big Tree
         Tname = 'CT1 '
         args['dtreeprune'] = True
@@ -162,7 +163,7 @@ class Interface:
         args['n'] = -1
         self.callrunner(Tname,z,args,esdash,
                         totalsize,objectives)
-        
+        """
         #NSGA
         if self.prob in POMPROB:
 
