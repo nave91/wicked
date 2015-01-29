@@ -4,8 +4,8 @@ import sys
 import reader
 
 ALGOS = ["CT"]
-PROBS = ["pom3C"]#["xomofl","xomogr","xomoos","xomoo2","xomoal"]#
-POPS = [500]#[100,200,300,400,500]
+PROBS = ["pom3B"]#["xomofl","xomogr","xomoos","xomoo2","xomoal"]#
+POPS = [100]#[100,200,300,400,500]
 INDS = [20]#[20,40,60,80]
 OBJS = [2]#[2,4,8]
 

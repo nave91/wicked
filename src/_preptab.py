@@ -229,12 +229,6 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False,read=False):
 
             es,mqw,endtime,nodleas,newrows = learn(z,st,
                                                    nodleas,base=base)
-
-            # calculate es
-            colstats = es.calc(len(newrows))
-            mqw = retreivemqws(colstats,objectives)
-            mqws.append(mqw)
-            endtimes.append(endtime)
         
             reader.makeTable(colname[z],zout)
             for r in newrows:
@@ -250,6 +244,13 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False,read=False):
                     reader.removeTable(key)
 
             _g+=1
+
+        # calculate es
+        colstats = es.calc(len(newrows))
+        mqw = retreivemqws(colstats,objectives)
+        mqws.append(mqw)
+        endtimes.append(endtime)
+
         #clean everything
         for key,value in data.items():
             if key not in [z]:
@@ -331,6 +332,38 @@ def tekprint(fname,Edash,deps,MinP,MaxP):
 
 def quartekprint(fname,Edash,deps,MinP,MaxP):
     Tech = sorted(Edash.keys())
+    Tech1 = ['0','W','N']
+    d0 = MinP
+    d100 = MaxP
+    header = ["","Rx","Median",""]
+    l = len(Edash.keys())
+    rows = []
+    writeout = ''
+    scriptstring = '\\begin{tabular}'+\
+                   '{|l@{~}c@{~}c@{~}r|}'+\
+                   '\n'+'\\arrayrulecolor{lightgray}\n'
+    
+    writeout += scriptstring
+    writeout += '\\rowcolor[gray]{0.85}  '+' & '.join(header)+'\\\\ \n'
+    for d in deps:
+
+        writeout += '\\hline\\rowcolor[gray]{1.0} '+str(d[1:])+' '
+        for _t,t in enumerate(Tech):
+            tmp = [Tech1[_t]]
+            writeout += ' & '
+            for _m in ['m']:
+                tmp.append(str(int(Edash[t][d][_m])))
+            tmp.append('\\quart{'+str(Edash[t][d]['s'])+'}'+\
+                       '{'+str(Edash[t][d]['q'])+'}'+\
+                       '{'+str(Edash[t][d]['m'])+'}')
+            writeout += ' & '.join(tmp)+' \\\\ \n'
+        
+    writeout+='\\end{tabular}}'+'\n'
+    ct_storeinfile(fname,[writeout])
+
+"""
+def quartekprintbig(fname,Edash,deps,MinP,MaxP):
+    Tech = sorted(Edash.keys())
     Tech1 = ['Base Line','CT0','NSGA II']
     d0 = MinP
     d100 = MaxP
@@ -359,3 +392,4 @@ def quartekprint(fname,Edash,deps,MinP,MaxP):
             writeout += ' & '.join(tmp)+' \\\\ \n'
     writeout+='\\end{tabular}}'+'\n'
     ct_storeinfile(fname,[writeout])
+"""

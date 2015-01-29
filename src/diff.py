@@ -254,7 +254,7 @@ def diff(z,args,model=args['m'],verbose=False,checkeach=False):
                     majclass_samples = branches.collection[wbid].samples
 
                     Diffs.append(Diff(C2wced,C2diffs,majclass_samples))
-                    
+
     return Diffs,betters,zlst,branches
 
 def printdiffs(diffs):

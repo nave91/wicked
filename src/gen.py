@@ -183,6 +183,8 @@ def smartsamples(Diffs,betters,model,verbose):
     
     if len(diffclus) == 0: 
         raise(ValueError,"Check gen!!")
+        
+    
     return diffclus
 
 
