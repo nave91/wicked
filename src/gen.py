@@ -216,6 +216,9 @@ def smartsamples_pom(z,
                 new = a + random.uniform(b,c)
                 if new > R['UPS'][fi]:
                     new = R['LOWS'][fi] + (new - R['UPS'][fi])
+                    # sanity check
+                    if new > R['UPS'][fi]:
+                        new = R['LOWS'][fi] + (new - R['UPS'][fi])
             row.append(round(new,2))
         # modify fea values in diffs
         for i in diffs:
