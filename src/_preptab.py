@@ -184,9 +184,6 @@ def learn(z,st,nodleas,base=False):
         from gen import genwithdiffs,smartsamples
         #T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
         T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
-        if len(T3zlst)==1: 
-            print "#"*35,"REPEATING","#"*35
-            _r -= 1
         nodes += branches.nodes
         leaves += branches.leaves
     elif not base:
@@ -207,6 +204,7 @@ def learn(z,st,nodleas,base=False):
     es = mqwZlst(T3zlst,chops)
     
     newrows = []
+
     for i in T3zlst:
         newrows += data[i]
     

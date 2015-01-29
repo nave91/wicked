@@ -160,7 +160,16 @@ def genwithdiffs_dtlz(z,
 
 def smartsamples(Diffs,betters,model,verbose):
     
-    diffclus = betters
+    #adding actual betters
+    bets = 'betters'
+    reader.makeTable(colname[z],bets)
+    for b in betters:
+        for r in data[b]:
+            ind = data[shortz].index(r[:-1])
+            reader.addRow(data[z][ind],bets)
+
+    #betters to new clus
+    diffclus = [bets] 
     if args['m'] in XOMOPROB: function = smartsamples_xomo
     elif args['m'] in POMPROB: function = smartsamples_pom
     else:
@@ -171,6 +180,7 @@ def smartsamples(Diffs,betters,model,verbose):
     for d in Diffs:
         tmp = d.generate(function,model,verbose=False)
         if tmp: diffclus.append(tmp)
+    
     if len(diffclus) == 0: 
         raise(ValueError,"Check gen!!")
     return diffclus

@@ -10,6 +10,7 @@ DTLZPROB = ["dtlz1","dtlz2","dtlz3","dtlz4"]
 name = ""
 z = "main"
 zout = "out"
+shortz = "shortenedz"
 args = {'v' : -1,                      #Verbose
         'ifile' : '',                  #input file
         'e' : 'median',                #evaluation criteria
