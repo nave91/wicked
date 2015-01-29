@@ -358,7 +358,7 @@ def quartekprint(fname,Edash,deps,MinP,MaxP):
                        '{'+str(Edash[t][d]['m'])+'}')
             writeout += ' & '.join(tmp)+' \\\\ \n'
         
-    writeout+='\\end{tabular}}'+'\n'
+    writeout+='\\end{tabular}'+'\n'
     ct_storeinfile(fname,[writeout])
 
 """
