@@ -221,8 +221,8 @@ class Interface:
         
         Edash,MinP,MaxP = dashedExps(esdash,dep[z])
         
-        tekprint(self.rname,Edash,dep[z],MinP,MaxP)
-        #quartekprint(self.rname,Edash,dep[z],MinP,MaxP)
+        #tekprint(self.rname,Edash,dep[z],MinP,MaxP)
+        quartekprint(self.rname,Edash,dep[z],MinP,MaxP)
         rows = display(Edash,dep[z],MinP,MaxP)
         ct_storeinfile(self.dname,rows)
 

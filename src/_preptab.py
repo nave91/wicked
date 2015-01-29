@@ -248,6 +248,9 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False):
                     reader.removeTable(key)
 
             _g+=1
+        #clean everything
+        for key,value in data.items():
+            reader.removeTable(key)
         _r += 1
 
 
