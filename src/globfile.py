@@ -32,8 +32,8 @@ args = {'v' : -1,                      #Verbose
         'bpop': 1000,                  #bootstrap population
         'fayyad': False,               #fayyad disc check
         'objind' : (-1,-1),            #num of deps and indeps for dtlz
-        'repeats': 20,                 #total no of times experi is done
-        'gens': 1                      #number of gens from wicked 
+        'repeats': 1,                 #total no of times experi is done
+        'gens': 2                      #number of gens from wicked 
         }
 #
 #Info for table

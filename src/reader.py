@@ -172,7 +172,7 @@ def removeData(z):
     makeTable(col,z)
 
 
-def copyTable(z,m,verbose):
+def copyTable(z,m,verbose=True):
     #copies table of z to m
     makeTable(colname[z],m)
     for r in data[z]:

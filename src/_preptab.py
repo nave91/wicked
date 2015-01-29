@@ -206,11 +206,11 @@ def learn(z,st,nodleas,base=False):
     
     es = mqwZlst(T3zlst,chops)
     
-    numrows = 0
+    newrows = []
     for i in T3zlst:
-        numrows += len(data[i])
+        newrows += data[i]
     
-    return es,mqw,endtime,(nodes,leaves),numrows
+    return es,mqw,endtime,(nodes,leaves),newrows
 
 def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False):
     mqws = []
@@ -227,24 +227,22 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False):
             resetSeed(_r)
             st = time.time()
 
-            es,mqw,endtime,nodleas,numrows = learn(z,st,
+            es,mqw,endtime,nodleas,newrows = learn(z,st,
                                                    nodleas,base=base)
 
             # calculate es
-            colstats = es.calc(numrows)
+            colstats = es.calc(len(newrows))
             mqw = retreivemqws(colstats,objectives)
             mqws.append(mqw)
             endtimes.append(endtime)
         
-
-
-            #reader.makeTable(colname[z],zout)
-            #for r in tmp_rows:
-            #    reader.addRow(r,zout)
+            reader.makeTable(colname[z],zout)
+            for r in newrows:
+                reader.addRow(r,zout)
             
-            #from table import outCsv
-            #outCsv([zout])
-            #sys.exit()
+            reader.removeTable(z)
+            reader.copyTable(zout,z)
+            reader.removeTable(zout)
 
             #Clean everything up 
             for key,value in data.items():
