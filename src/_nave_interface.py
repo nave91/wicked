@@ -119,7 +119,7 @@ class Interface:
         esdash = {}
         totalsize = {}
         N = self.pop
-        read = True
+        read = False#True
         objectives = []
 
         if read:
