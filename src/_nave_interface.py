@@ -55,7 +55,7 @@ class Interface:
                                        str(avggens)])
     
 
-    def callrunner(self,Tname,z,args,esdash,totalsize,objectives,base=False):
+    def callrunner(self,Tname,z,args,esdash,totalsize,objectives,base=False,read=False):
         
         if self.prob in DTLZPROB:
             Tname = Tname+str(self.prob)+str(self.pop)+'p'+\
@@ -67,7 +67,7 @@ class Interface:
         self.starttime[Tname] = time.time()
         print ">>>>>"*10,Tname,"<<<<<"*10
         esdash,totalsize,endtime,nodlea = runner(z,args,esdash,
-                                                 totalsize,Tname,objectives,self.pop,base)
+                                                 totalsize,Tname,objectives,self.pop,base,read)
         self.endtime[Tname] = endtime
         self.writefile(Tname,nodlea)
 
@@ -123,6 +123,7 @@ class Interface:
         objectives = []
 
         if read:
+            sys.stderr.write("# reading population.\n")
             header,rows,objectives = self.readInitialPopulation()
             #Load initial Population
             reader.makeTable(header,z)
@@ -145,7 +146,7 @@ class Interface:
         args['i'] = -1
         args['p'] = False
         self.callrunner(Tname,z,args,esdash,
-                        totalsize,objectives,base=True)
+                        totalsize,objectives,base=True,read=read)
         
         #CT0 SMall Tree
         Tname = 'CT0 '
@@ -157,7 +158,7 @@ class Interface:
         args['fayyad'] = False
         args['n'] = -1 ###changed to 0.5
         self.callrunner(Tname,z,args,esdash,
-                        totalsize,objectives)
+                        totalsize,objectives,read=read)
         
         """
         #CT1 Big Tree

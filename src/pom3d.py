@@ -1,9 +1,11 @@
-import os,sys,inspect
+"""import os,sys,inspect
 cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile( inspect.currentframe()))[0],"pom3")))
 if cmd_subfolder not in sys.path:
     sys.path.insert(0, cmd_subfolder)
+"""
 
-from pom3 import *
+#from pom3 import *
+from pom3 import pom3_builder
 
 MODEL = { "pom3A": 
           {
@@ -81,7 +83,7 @@ def pomrunner(header,rows,verbose):
     return pom3_builder.pom3_csvmaker(header,rows,verbose)
 
 def pom3d(N=50):
-    os = Os()
+    os = Os('pom3B')
     os.trials(100,True)
     
 if __name__ == "__main__":

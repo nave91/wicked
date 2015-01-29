@@ -210,7 +210,7 @@ def learn(z,st,nodleas,base=False):
     
     return es,mqw,endtime,(nodes,leaves),newrows
 
-def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False):
+def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False,read=False):
     mqws = []
     nodleas = (0,0)
     endtimes = []
@@ -220,7 +220,9 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False):
     
     while _r < args['repeats']:
         _g = 0
-        if z not in data: objectives = loadPopulation(z,args,pop)
+        if not read:
+            sys.stderr.write("# loading population.\n")
+            objectives = loadPopulation(z,args,pop)
         while _g < args['gens']:
             resetSeed(_r)
             st = time.time()
@@ -250,7 +252,8 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False):
             _g+=1
         #clean everything
         for key,value in data.items():
-            reader.removeTable(key)
+            if key not in [z]:
+                reader.removeTable(key)
         _r += 1
 
 
