@@ -35,13 +35,11 @@ class Branch:
                 if int(threshold) in buckets[buck_fea].hi.keys():
                     self.thresholds.append(buckets[buck_fea].hi[int(threshold)])
                 else:
-                    print "wowowoowoww"*100
                     self.thresholds.append(buckets[buck_fea].hi[0])
             else:
                 if int(threshold) in buckets[buck_fea].lo.keys():
                     self.thresholds.append(buckets[buck_fea].lo[int(threshold)])
                 else:
-                    print "wowowoowoww"*100
                     self.thresholds.append(buckets[buck_fea].lo[0])
         else:
             self.features.append(feature)

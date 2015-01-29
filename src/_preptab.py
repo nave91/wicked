@@ -171,83 +171,116 @@ def retreivemqws(colstats,objectives):
             mqws[_i].append(colstats[_o][_i])
     return mqws
 
-def runner(z,args,esdash,totalsize,Tname,objectives,base=False):
-    model = args['m']
+def learn(z,st,nodleas,base=False):
+    nodes,leaves = nodleas[0],nodleas[1]
+    if args['d'] or args['i'] > 0 and not base:
+        #To discretize or prune with infogain
+        import tshortener
+        zlst = xy_proj.xy_proj(z,data,args)
+        zshort = tshortener.tshortener(z,zlst,colname,data,
+                                       dep,indep,args['i'],args['d'])
+        Diffs,betters,zlst,branches = diff(zshort,args)
+        endtime = time.time() - st
+        from gen import genwithdiffs,smartsamples
+        #T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
+        T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
+        if len(T3zlst)==1: 
+            print "#"*35,"REPEATING","#"*35
+            _r -= 1
+        nodes += branches.nodes
+        leaves += branches.leaves
+    elif not base:
+        # Just plain CT no prune
+        Diffs,betters,zlst,branches = diff(z,args)
+        endtime = time.time() - st
+        from gen import genwithdiffs,smartsamples
+        #T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
+        T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
+        nodes += branches.nodes
+        leaves += branches.leaves
+    else:
+        #Base
+        T0zlst = xy_proj.xy_proj(z,data,args)
+        T3zlst = T0zlst[1:]
+        endtime = time.time() - st
+    
+    es = mqwZlst(T3zlst,chops)
+    
+    numrows = 0
+    for i in T3zlst:
+        numrows += len(data[i])
+    
+    return es,mqw,endtime,(nodes,leaves),numrows
+
+def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False):
     mqws = []
-    nodes,leaves = 0,0 
+    nodleas = (0,0)
     endtimes = []
     _st = time.time()
     _r = 0
     
-    while _r < (args['repeats']):
-        resetSeed(_r)
-        st = time.time()
-        tmp_totalsize = {}
-        tmp_totalsize[Tname] = 0
-        if args['d'] or args['i'] > 0 and not base:
-            #To discretize or prune with infogain
-            import tshortener
-            zlst = xy_proj.xy_proj(z,data,args)
-            zshort = tshortener.tshortener(z,zlst,colname,data,
-                                           dep,indep,args['i'],args['d'])
-            Diffs,betters,zlst,branches = diff(zshort,args,model)
-            endtime = time.time() - st
-            from gen import genwithdiffs,smartsamples
-            #T3zlst = genwithdiffs(Diffs,betters,model,verbose=False)
-            T3zlst = smartsamples(Diffs,betters,model,verbose=False)
-            if len(T3zlst)==1: 
-                print "#"*35,"REPEATING","#"*35
-                _r -= 1
-            nodes += branches.nodes
-            leaves += branches.leaves
-        elif not base:
-            # Just plain CT no prune
-            Diffs,betters,zlst,branches = diff(z,args,model)
-            endtime = time.time() - st
-            from gen import genwithdiffs,smartsamples
-            #T3zlst = genwithdiffs(Diffs,betters,model,verbose=False)
-            T3zlst = smartsamples(Diffs,betters,model,verbose=False)
-            nodes += branches.nodes
-            leaves += branches.leaves
-        else:
-            #Base
-            T0zlst = xy_proj.xy_proj(z,data,args)
-            T3zlst = T0zlst[1:]
-            endtime = time.time() - st
     
-        es = mqwZlst(T3zlst,chops)
-        for i in T3zlst:
-            tmp_totalsize[Tname] += len(data[i])
-        #Clean everything up 
-        for key,value in data.items():
-            if key not in [z]: 
-                reader.removeTable(key)
+    while _r < args['repeats']:
+        _g = 0
+        if z not in data: objectives = loadPopulation(z,args,pop)
+        while _g < args['gens']:
+            resetSeed(_r)
+            st = time.time()
+
+            es,mqw,endtime,nodleas,numrows = learn(z,st,
+                                                   nodleas,base=base)
+
+            # calculate es
+            colstats = es.calc(numrows)
+            mqw = retreivemqws(colstats,objectives)
+            mqws.append(mqw)
+            endtimes.append(endtime)
         
-        # calculate es
-        colstats = es.calc(tmp_totalsize[Tname])
-        mqw = retreivemqws(colstats,objectives)
-        """
-        for i,j in mqw.items():
-            print i,j
-            for _j in j:
-                if _j < 0 or _j > 100000: 
-                    print es
-                    print Diffs
-                    
-                    print _j,mqw
-                    sys.exit()
-        """
-        mqws.append(mqw)
-        endtimes.append(endtime)
+
+
+            #reader.makeTable(colname[z],zout)
+            #for r in tmp_rows:
+            #    reader.addRow(r,zout)
+            
+            #from table import outCsv
+            #outCsv([zout])
+            #sys.exit()
+
+            #Clean everything up 
+            for key,value in data.items():
+                if key not in [z,zout]: 
+                    reader.removeTable(key)
+
+            _g+=1
         _r += 1
+
+
+
                                     
     es = buildEs(mqws,objectives,Tname)
     esdash[Tname] = es
-    totalsize[Tname] = args['repeats']
+    totalsize[Tname] = args['repeats']*args['gens']
     endtime = sum(endtimes)+_st
-    return esdash,totalsize,endtime,(nodes,leaves)
+    nodleas = (nodleas[0]/totalsize[Tname],nodleas[1]/totalsize[Tname])
+    return esdash,totalsize,endtime,nodleas
         
 
+def loadPopulation(z,args,pop):
+    if args['m'] in POMPROB:
+        names = ["$Culture", "$Criticality", 
+                 "$CriticalityModifier", 
+                 "$InitialKnown", "$InterDependency", "$Dynamism", 
+                 "$Size", "$Plan", "$TeamSize",
+                 '-cost','+completion','-idle']        
+        from pom3d import Os
+        os = Os(args['m'],names[:-3])
+        header,rows = os.trials(pop)
+        reader.makeTable(header,z)
+        for r in rows:
+            reader.addRow(r,z)
+        objectives = names[-3:]
+    return objectives
+            
 def ct_storeinfile(fname,output):
     sys.stderr.write("#writing into file "+fname+"\n")
     with open(fname,'ab') as f:

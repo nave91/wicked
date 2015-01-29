@@ -64,7 +64,7 @@ class xy:
         if n != 0:
             xmu = i.xs*1.0/n
             ymu = i.ys*1.0/n
-        #print n,xmu,ymu
+        #print n,xmu,ymu,i.kept
         if spy and n!=0:
             print '|--'*lvl+str(n)#,"xmuymu:",xmu,ymu
         if int(n) == int(oldn) or int(n) == 0 :

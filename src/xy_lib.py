@@ -108,6 +108,7 @@ def xycalc(z):
         r = xy.row(d)
         r.x = x[ind]
         r.y = y[ind]
+        #print r.x,r.y,a,b,c,data[z][ind],data[z][inde]
         rows.append(r)
         
     return rows

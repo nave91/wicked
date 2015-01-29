@@ -37,11 +37,14 @@ class O:
         return s
 
 class Os:
-    def __init__(self,model):
+    def __init__(self,model,names=None):
         self.collection = {}
-        self.names = ["Culture", "Criticality", "CriticalityModifier", 
-                      "InitialKnown", "InterDependency", "Dynamism", 
-                      "Size", "Plan", "TeamSize"]   
+        if names: self.names = names
+        else:
+            self.names = ["Culture", "Criticality", 
+                          "CriticalityModifier", 
+                          "InitialKnown", "InterDependency", "Dynamism", 
+                          "Size", "Plan", "TeamSize"]   
         self.LOWS = MODEL[model]["LOWS"]
         self.UPS  = MODEL[model]["UPS"]
         for _n,n in enumerate(self.names):

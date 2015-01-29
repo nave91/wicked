@@ -22,6 +22,7 @@ def xy_proj(z,data,args,check=False):
     l = 0
 
     rows = sorted(rows)
+    
     for r in rows:
         xyobj.keep(r)
         l += 1
@@ -40,6 +41,7 @@ def xy_proj(z,data,args,check=False):
             leafs.append(leaf)
     for n,leaf in enumerate(leafs):
         leaves[n] = leaf
+    
     #Build a summary leaf table
     #ltab = leaftab(leaves)
     """

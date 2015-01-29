@@ -34,8 +34,8 @@ class Interface:
                            self.starttime[Tname])*1000,2))] 
 
     def writefile(self,Tname,nodlea=None,avggens=None):
-        nodes = nodlea[0]/args['repeats']
-        leaves = nodlea[1]/args['repeats']
+        nodes = nodlea[0]
+        leaves = nodlea[1]
         wrbranch(self.nlname,Tname,nodes,leaves)
         
         ct_storeinfile(self.tname,self.gettime(Tname))
@@ -67,16 +67,12 @@ class Interface:
         self.starttime[Tname] = time.time()
         print ">>>>>"*10,Tname,"<<<<<"*10
         esdash,totalsize,endtime,nodlea = runner(z,args,esdash,
-                                                 totalsize,Tname,objectives,base)
+                                                 totalsize,Tname,objectives,self.pop,base)
         self.endtime[Tname] = endtime
         self.writefile(Tname,nodlea)
 
-    def run(self):
 
-        z = "main"
-        esdash = {}
-        totalsize = {}
-
+    def readInitialPopulation(self):
         #TUNE RIG ACCORDING TO MODEL and READ INITIAL POPULATION
         if self.prob in POMPROB:
             csvfile = open(self.pname,'r')
@@ -109,17 +105,29 @@ class Interface:
                 #ALL OBJS are MINIMIZED == negative o below
                 objectives = [ '-'+o for o in objectives] 
                 header = header[:-self.obj]+objectives
-                
         else:
             print "Wrong model"
             sys.exit()
+    
+        return header,rows,objectives
 
-        
-        #Load initial Population
-        reader.makeTable(header,z)
-        for r in rows: reader.addRow(r,z)
-        N = int(len(data[z])**0.5)
-        
+    
+
+    def run(self):
+
+        z = "main"
+        esdash = {}
+        totalsize = {}
+        N = self.pop
+        read = True
+        objectives = []
+
+        if read:
+            header,rows,objectives = self.readInitialPopulation()
+            #Load initial Population
+            reader.makeTable(header,z)
+            for r in rows: reader.addRow(r,z)
+            
 
         #Default Configuration
         args['l'] = 0.5*N #leaf size
@@ -177,7 +185,7 @@ class Interface:
             self.endtime[Tname] = float(timefile.readline())
             totalsize[Tname] = 20
             esdash[Tname],avggens = jmoo_pom(self.jname)
-            self.writefile(Tname,[-args['repeats'],-args['repeats']],avggens=avggens)
+            self.writefile(Tname,[-1,-1],avggens=avggens)
             
         elif self.prob in XOMOPROB:
 
@@ -191,7 +199,7 @@ class Interface:
             self.endtime[Tname] = float(timefile.readline())
             totalsize[Tname] = 20
             esdash[Tname],avggens = jmoo_xomo(self.jname)
-            self.writefile(Tname,[-args['repeats'],-args['repeats']],avggens=avggens)
+            self.writefile(Tname,[-1,-1],avggens=avggens)
             
         elif self.prob in DTLZPROB:
             
@@ -205,7 +213,7 @@ class Interface:
             totalsize[Tname] = args['repeats']
             esdash[Tname],avggens = moea_dtlz(z)
             self.endtime[Tname] = time.time()
-            self.writefile(Tname,[-args['repeats'],-args['repeats']],avggens=avggens)
+            self.writefile(Tname,[-1,-1],avggens=avggens)
 
         for key,es in esdash.items():
             es.calc(totalsize[key])
@@ -220,58 +228,3 @@ class Interface:
 
 
 
-"""
-        #CT1 Big Tree
-        Tname = 'CT1_'+str(self.prob)+str(self.pop)
-        self.starttime[Tname] = time.time()
-        print ">>>>>"*10,Tname,"<<<<<"*10
-        totalsize[Tname] = 0
-        args['dtreeprune'] = True
-        args['distprune'] = False
-        args['d'] = False
-        args['i'] = -1
-        args['p'] = False
-        args['fayyad'] = False
-        esdash,totalsize,endtime,nodlea = runner(z,args,esdash,
-                                  totalsize,Tname,objectives)                    
-        self.endtime[Tname] = endtime
-        ct_storeinfile(self.tname,self.gettime(Tname))
-        
-        
-        #CT0* Fayyad on SMall Tree
-        Tname = 'CT0*_'+str(self.prob)+str(self.pop)
-        self.starttime[Tname] = time.time()
-        print ">>>>>"*10,Tname,"<<<<<"*10
-        totalsize[Tname] = 0
-        args['dtreeprune'] = True
-        args['distprune'] = False
-        args['d'] = True
-        args['i'] = 0.75
-        args['p'] = False
-        args['fayyad'] = True
-        esdash,totalsize,endtime,nodlea = runner(z,args,esdash,
-                                  totalsize,Tname,objectives)
-        self.endtime[Tname] = endtime
-        ct_storeinfile(self.tname,self.gettime(Tname))
-
-        
-        
-        #CT1* Fayyad on Big Tree
-        Tname = 'CT1*_'+str(self.prob)+str(self.pop)
-        self.starttime[Tname] = time.time()
-        print ">>>>>"*10,Tname,"<<<<<"*10
-        totalsize[Tname] = 0
-        args['dtreeprune'] = True
-        args['distprune'] = False
-        args['d'] = False
-        args['i'] = -1
-        args['p'] = False
-        args['fayyad'] = True
-        esdash,totalsize,endtime,nodlea = runner(z,args,esdash,
-                                  totalsize,Tname,objectives)                    
-         
-        self.endtime[Tname] = endtime
-        ct_storeinfile(self.tname,self.gettime(Tname))
-        
-"""
-        

@@ -33,21 +33,22 @@ class Diff:
 def bettercheck(one,two,verbose=False):
     
     def envy(one,two):
-        win,lose = 0,0
+        # envy for decreasing obj
+        yes = False
         for x,y in zip(one,two):
-            if x > y: win += 1
-            if x < y: lose += 1
-        if lose > win: return True
-        else: return False
+            if x > y: yes= True
+            if x < y: return False
+        return yes
         
     ones,twos = [],[]
-    for fea in more[one]:
+    for fea in less[one]:
         ones.append(mu[one][fea])
         twos.append(mu[two][fea])
-    for fea in less[one]:
+    for fea in more[one]:
         ones.append(mu[two][fea])
         twos.append(mu[one][fea])
     return not envy(ones,twos)
+
 """
 def bettercheck(one,two,verbose = False):
     #both tests passed, similar
@@ -205,26 +206,22 @@ def diff(z,args,model=args['m'],verbose=False,checkeach=False):
                     else: scores[one] = 1
     zlst = temp_zlst[:]
     scorestuple = sorted(scores.iteritems(), key=lambda x:-x[1])
-    nb = len(scores)*0.25 #Number of betters = sq_rt(len(scores)) 
+    nb = len(scores)**0.5 #Number of betters = sq_rt(len(scores)) 
     betterstuple = scorestuple[:int(nb)]
     lastbetterscore = betterstuple[-1][1]
-    print lastbetterscore
     
     betters,worses = [],[] #List of better and worse clusters
     for i in betterstuple:
         betters.append(i[0])
     for i in scorestuple:
-        if i[1]==lastbetterscore and i[0] not in betters:
-            betters.append(i[0])
-    for i in scorestuple:
         if i[0] not in betters:
             worses.append(i[0])
-    if True:#verbose:
+    
+    if verbose:
         print scorestuple
         print "better",betters
         print "worse",worses
-        #print "branches:\n",branches
-    #sys.exit()
+        sys.exit()
     decs,incs,sames,clus = 0,0,0,0
     outdiffs = []
     C1outzlst = []

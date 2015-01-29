@@ -9,6 +9,7 @@ DTLZPROB = ["dtlz1","dtlz2","dtlz3","dtlz4"]
 #
 name = ""
 z = "main"
+zout = "out"
 args = {'v' : -1,                      #Verbose
         'ifile' : '',                  #input file
         'e' : 'median',                #evaluation criteria
@@ -31,7 +32,8 @@ args = {'v' : -1,                      #Verbose
         'bpop': 1000,                  #bootstrap population
         'fayyad': False,               #fayyad disc check
         'objind' : (-1,-1),            #num of deps and indeps for dtlz
-        'repeats': 1
+        'repeats': 20,                 #total no of times experi is done
+        'gens': 1                      #number of gens from wicked 
         }
 #
 #Info for table
