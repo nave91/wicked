@@ -220,6 +220,7 @@ class Interface:
             es.calc(totalsize[key])
         Tech = sorted(totalsize.keys())
         
+        print esdash
         Edash,MinP,MaxP = dashedExps(esdash,dep[z])
         
         #tekprint(self.rname,Edash,dep[z],MinP,MaxP)

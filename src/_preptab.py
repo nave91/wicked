@@ -282,6 +282,19 @@ def loadPopulation(z,args,pop):
         for r in rows:
             reader.addRow(r,z)
         objectives = names[-3:]
+    elif args['m'] in XOMOPROB:
+        from xomo import xomo_builder
+        header = ['?aa','$sced','$cplx','$site','$resl','$acap',
+                  '$etat','$rely','$data','$prec','$pmat','$aexp',
+                  '$flex','$pcon','$tool','$time','$stor','$docu',
+                  '?b','$plex','$pcap','+kloc','$ltex','$pr','$ruse',
+                  '$team','$pvol','-effort','-months',
+                  '-defects','-risks']
+        rows = xomo_builder.trials(args['m'],pop)
+        reader.makeTable(header,z)
+        for r in rows:
+            reader.addRow(r,z)
+        objectives = ['+kloc','-effort','-defects','-months','-risks']
     return objectives
             
 def ct_storeinfile(fname,output):

@@ -194,6 +194,7 @@ def smartsamples_pom(z,
                     n=500,
                     verbose=False):
     rows = []
+
     shortz,main = 'shortenedz','main'
     if len(data[z]) < 3:
         return None
@@ -236,51 +237,79 @@ def smartsamples_pom(z,
         rows.append(row)
     znew = z + 'gened'
     #manage header
-    header = colname[main][:-3]
+    header = indep[main]
     header,rows = pomrunner(header,rows,verbose=False)
     reader.makeTable(header,znew)
     for i in rows: reader.addRow(i,znew)
-    sys.stderr.write("# Table " + znew + " created\n")
+    sys.stderr.write("# Table " + znew + " created.\n")
     return znew
     
 
 def smartsamples_xomo(z,
-                    diffs,
-                    model,
-                    output=os.environ["HOME"]+"/tmp/pom",
-                    verbose=False,n=500):
+                      diffs,
+                      model,
+                      n=500,
+                      verbose=False):
     rows = []
-    from xomod import *
-    numrows = len(data[z])
-    for i in range(numrows):
+    shortz,main = 'shortenedz','main'
+    if len(data[z]) < 3:
+        return None
+    
+    actualrows = []
+    for r in data[z]:
+        ind = data[shortz].index(r[:-1])
+        actualrows.append(ind)
+    
+    R = ()
+    def fearange(fea):
+        if fea in MODEL[model]:
+            R = MODEL[model][fea]
+        else:
+            R = MODEL["xomogeneric"][fea]
+        return R
+    
+    for i in range(n):
         row = []
-        for fea in indep[z]:
-            fi = colname[z].index(fea)
-            _a,_b,_c = random.sample(range(0,len(data[z])-1),3)
-            a,b,c = data[z][_a][fi],data[z][_b][fi],data[z][_c][fi]
+        #smart sample all
+        for fea in indep[main]+['+kloc']:
+            fi = colname[main].index(fea)
+            _a,_b,_c = random.sample(actualrows,3)
+            a,b,c = data[main][_a][fi],data[main][_b][fi],\
+                    data[main][_c][fi]
             if b == c: new = b
             else:                
                 new = a + random.uniform(b,c)
-                if fea[1:] in MODEL[model]:
-                    r = MODEL[model][fea[1:]]
-                else:
-                    r = MODEL["generic"][fea[1:]]
-                if new > max(r):
-                    new = min(r) + (new - max(r))
+                R = fearange(fea[1:])
+                if new > max(R):
+                    new = min(R) + (new - max(R))
+                    #sanity check
+                    if new > max(R):
+                        new = min(R) + (new - max(R))
             row.append(round(new,2))
+        for i in diffs:
+            fea = i[0]
+            cond = i[1]
+            thresh = i[2]
+            R = fearange(fea[1:])
+            if cond:
+                val = random.uniform(min(R),thresh)
+            else:
+                val = random.uniform(thresh,max(R))
+            fi = colname[z].index(fea)
+            row[fi] = round(val,2)
         rows.append(row)
-    header = []
-    print indep[z]
-    for fea in indep[z]:
-        ind = colname[z].index(fea)
-        header.append(colname[z][ind])
-    print len(header),len(rows[0]),indep[z],colname[z],dep[z]
+
     from xomo import xomo_builder
-    print xomo_builder.xomo_csvmaker(model,rows,names=header)
-    print indep[z]
-    print MODEL[model]
-    print data[z][0]
-    print rows[0],len(rows[0]),len(rows),len(data[z])
+    znew = z + 'gened'
+    #print len(rows[0]),len(colname[main]),len(colname[z]),len(indep[main])
+    #print colname[main],dep[main],indep[main]
+    #manage header
+    header = indep[main]+['+kloc']
+    header,rows = xomo_builder.xomo_csvmaker(args['m'],rows,names=header)
+    reader.makeTable(header,znew)
+    for i in rows: reader.addRow(i,znew)
+    sys.stderr.write("# Table "+ znew + "created.\n")
+    return znew
 
 def genwithrange(z,
                  ranges,

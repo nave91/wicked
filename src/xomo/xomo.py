@@ -798,6 +798,7 @@ class Cocomo(Model):
 
 
   def simulate(o,header,row,verbose=True):
+    # by nave!!
     keys = []
     _efforts = []
     _months = []
@@ -808,6 +809,8 @@ class Cocomo(Model):
     assert(len(header) == len(row))
     for _i in range(0,len(header)):
       x[header[_i]] = row[_i]
+    if "b" not in x: x["b"] = random.uniform(3,10)
+    if "aa" not in x: x["aa"] = random.uniform(1,6)
     a    = x["b"]
     b    = o.all["b"].y(a,reset=True)
     kloc = x["kloc"]

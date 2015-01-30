@@ -28,18 +28,7 @@ def line(csvfile): #returns formatted line from the csvfile
     else:
         return -1
 
-def oldbuilder(model,pop):
-    header = ['?aa','$sced','$cplx','$site','$resl','$acap',
-              '$etat','$rely','$data','$prec','$pmat','$aexp',
-              '$flex','$pcon','$tool','$time','$stor','$docu',
-              '?b','$plex','$pcap','$kloc','$ltex','$pr','$ruse',
-              '$team','$pvol','-effort','-months',
-              '-defects','-risks']
-    xomomap = {"xomofl" : "flight",
-               "xomogr" : "ground",
-               "xomoos" : "osp",
-               "xomoo2" : "osp2",
-               "xomoal" : "all"}
+def trials(model,pop):
     
     model = xomomap[model]
     import xomo
@@ -51,7 +40,7 @@ def oldbuilder(model,pop):
         for _i,i in enumerate(r):
             rows[_r][_i] = round(float(i),2)
     
-    return header,rows
+    return rows
 
 def builder(csvfile):
     header = []
@@ -71,8 +60,10 @@ def builder(csvfile):
                 seen = True
                 header = lst
 
-def xomo_csvmaker(model,rows,verbose=True,names=None):
-    header = ['?aa','$sced','$cplx','$site','$resl','$acap',
+def xomo_csvmaker(model,rows,verbose=False,names=None):
+    if names: header = names
+    else:
+        header = ['?aa','$sced','$cplx','$site','$resl','$acap',
               '$etat','$rely','$data','$prec','$pmat','$aexp',
               '$flex','$pcon','$tool','$time','$stor','$docu',
               '?b','$plex','$pcap','+kloc','$ltex','$pr','$ruse',
@@ -107,7 +98,6 @@ def xomo_csvmaker(model,rows,verbose=True,names=None):
                 s +=str(i) + ','
             print s[:len(s)-1]
     return header,bigrows
-    
 
 
 
