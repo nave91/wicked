@@ -15,7 +15,7 @@ def rebuild_mqws_pom3(mqws):
 
 def jmoo_xomo(jm):
     args['jmoo'] = jm 
-    objectives = ['-effort','-months','-defects','-risks']
+    objectives = ['+kloc','-effort','-months','-defects','-risks']
     with open(jm,'r') as picklefile:
         mqws = pickle.load(picklefile)
     #get avg gens

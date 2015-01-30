@@ -1,0 +1,20 @@
+\begin{tabular}{|l@{~}c@{~}c@{~}r|}
+\arrayrulecolor{lightgray}
+\rowcolor[gray]{0.85}   & Rx & Median & \\ 
+\hline\rowcolor[gray]{1.0} kloc  & 0 & 13 & \quart{3.0}{11.0}{13.0} \\ 
+ & W & 9 & \quart{0.0}{7.0}{9.0} \\ 
+ & N & 45 & \quart{12.0}{58.0}{45.0} \\ 
+\hline\rowcolor[gray]{1.0} effort  & 0 & 4 & \quart{2.0}{4.0}{4.0} \\ 
+ & W & 3 & \quart{0.0}{5.0}{3.0} \\ 
+ & N & 8 & \quart{3.0}{12.0}{8.0} \\ 
+\hline\rowcolor[gray]{1.0} months  & 0 & 22 & \quart{14.0}{1.0}{22.0} \\ 
+ & W & 10 & \quart{0.0}{5.0}{10.0} \\ 
+ & N & 28 & \quart{18.0}{8.0}{28.0} \\ 
+\hline\rowcolor[gray]{1.0} defects  & 0 & 4 & \quart{2.0}{5.0}{4.0} \\ 
+ & W & 2 & \quart{0.0}{4.0}{2.0} \\ 
+ & N & 5 & \quart{2.0}{9.0}{5.0} \\ 
+\hline\rowcolor[gray]{1.0} risks  & 0 & 14 & \quart{4.0}{18.0}{14.0} \\ 
+ & W & 6 & \quart{0.0}{10.0}{6.0} \\ 
+ & N & 16 & \quart{5.0}{22.0}{16.0} \\ 
+\end{tabular}
+
