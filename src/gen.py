@@ -159,6 +159,7 @@ def genwithdiffs_dtlz(z,
     return znew
 
 def smartsamples(Diffs,betters,model,verbose):
+
     
     #adding actual betters
     bets = 'betters'
@@ -172,11 +173,13 @@ def smartsamples(Diffs,betters,model,verbose):
     diffclus = [bets] 
     if args['m'] in XOMOPROB: function = smartsamples_xomo
     elif args['m'] in POMPROB: function = smartsamples_pom
+    elif args['m'] in DTLZPROB: function = smartsamples_dtlz
     else:
         #model not recognized
         print "!"*30,"stuck in difff","!"*30
         sys.exit()
-                    
+              
+    print Diffs
     for d in Diffs:
         tmp = d.generate(function,model,verbose=False)
         if tmp: diffclus.append(tmp)
@@ -184,7 +187,8 @@ def smartsamples(Diffs,betters,model,verbose):
     if len(diffclus) == 0: 
         raise(ValueError,"Check gen!!")
         
-    
+    print diffclus,
+    sys.exit()
     return diffclus
 
 
@@ -198,7 +202,6 @@ def smartsamples_pom(z,
     shortz,main = 'shortenedz','main'
     if len(data[z]) < 3:
         return None
-    from pom3d import *
     #find actual rows not shortened ones
     actualrows = []
     for r in data[z]:
@@ -238,6 +241,7 @@ def smartsamples_pom(z,
     znew = z + 'gened'
     #manage header
     header = indep[main]
+    from pom3d import *
     header,rows = pomrunner(header,rows,verbose=False)
     reader.makeTable(header,znew)
     for i in rows: reader.addRow(i,znew)
@@ -301,15 +305,44 @@ def smartsamples_xomo(z,
 
     from xomo import xomo_builder
     znew = z + 'gened'
-    #print len(rows[0]),len(colname[main]),len(colname[z]),len(indep[main])
-    #print colname[main],dep[main],indep[main]
-    #manage header
     header = indep[main]+['+kloc']
     header,rows = xomo_builder.xomo_csvmaker(args['m'],rows,names=header)
     reader.makeTable(header,znew)
     for i in rows: reader.addRow(i,znew)
     sys.stderr.write("# Table "+ znew + "created.\n")
     return znew
+
+def smartsamples_dtlz(z,
+                      diffs,
+                      model,
+                      n=500,
+                      verbose=False):
+    print "im here bitch"
+    sys.exit()
+    rows = []
+    shortz,main = 'shortenedz','main'
+    if len(data[z]) < 3:
+        return None
+    #find actual rows not shortened ones
+    actualrows = []
+    for r in data[z]:
+        ind = data[shortz].index(r[:-1])
+        actualrows.append(ind)
+        
+    for i in range(n):
+        row = []
+        #smart sample all
+        R = MODEL[model]
+        for fea in indep[main]:
+            fi = colname[main].index(fea)
+            _a,_b,_c = random.sample(actualrows,3)
+            a,b,c = data[main][_a][fi],data[main][_b][fi],\
+                    data[main][_c][fi]
+            if b == c: new = b
+            else:                
+                new = a + random.uniform(b,c)
+
+        
 
 def genwithrange(z,
                  ranges,

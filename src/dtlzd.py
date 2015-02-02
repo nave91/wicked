@@ -76,7 +76,7 @@ class Os:
         #inp = [map(int,inp[i]) for i in range(len(inp))] #converts to int
         for i in range(len(inp)):
             rows.append(inp[i]+self.modelFunction(inp[i],self.obj)) 
-        header = self.names + ['obj'+str(i) for i in range(self.obj)]
+        header = self.names + ['-obj'+str(i) for i in range(self.obj)]
         return header,rows
 
     def __str__(self):

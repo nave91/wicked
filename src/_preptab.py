@@ -166,6 +166,7 @@ def wrbranch(bname,Tname,nodes,leaves):
 def retreivemqws(colstats,objectives):
     m,q,w,s = 'm','q','w','s'
     mqws = {m:[], q:[], w:[], s:[]}
+    print colstats
     for _i in [m,q,w,s]:
         for _o in objectives:
             mqws[_i].append(colstats[_o][_i])
@@ -201,8 +202,8 @@ def learn(z,st,nodleas,base=False):
         T3zlst = T0zlst[1:]
         endtime = time.time() - st
     
+
     es = mqwZlst(T3zlst,chops)
-    
     newrows = []
 
     for i in T3zlst:
@@ -216,7 +217,6 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False,read=False):
     endtimes = []
     _st = time.time()
     _r = 0
-    
     
     while _r < args['repeats']:
         _g = 0
@@ -245,6 +245,7 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False,read=False):
 
             _g+=1
 
+        
         # calculate es
         colstats = es.calc(len(newrows))
         mqw = retreivemqws(colstats,objectives)
@@ -295,6 +296,14 @@ def loadPopulation(z,args,pop):
         for r in rows:
             reader.addRow(r,z)
         objectives = ['+kloc','-effort','-defects','-months','-risks']
+    elif args['m'] in DTLZPROB:
+        from dtlzd import Os
+        init_dtlz = Os(args['m'],args['objind'])
+        header,rows = init_dtlz.trials(pop)
+        reader.makeTable(header,z)
+        for r in rows:
+            reader.addRow(r,z)
+        objectives = [i for i in header[-args['objind'][0]:]]
     return objectives
             
 def ct_storeinfile(fname,output):
