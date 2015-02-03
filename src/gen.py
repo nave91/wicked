@@ -179,7 +179,6 @@ def smartsamples(Diffs,betters,model,verbose):
         print "!"*30,"stuck in difff","!"*30
         sys.exit()
               
-    print Diffs
     for d in Diffs:
         tmp = d.generate(function,model,verbose=False)
         if tmp: diffclus.append(tmp)
@@ -187,8 +186,6 @@ def smartsamples(Diffs,betters,model,verbose):
     if len(diffclus) == 0: 
         raise(ValueError,"Check gen!!")
         
-    print diffclus,
-    sys.exit()
     return diffclus
 
 
@@ -317,8 +314,6 @@ def smartsamples_dtlz(z,
                       model,
                       n=500,
                       verbose=False):
-    print "im here bitch"
-    sys.exit()
     rows = []
     shortz,main = 'shortenedz','main'
     if len(data[z]) < 3:
@@ -332,7 +327,7 @@ def smartsamples_dtlz(z,
     for i in range(n):
         row = []
         #smart sample all
-        R = MODEL[model]
+        R = MODEL[model[:-1]]
         for fea in indep[main]:
             fi = colname[main].index(fea)
             _a,_b,_c = random.sample(actualrows,3)
@@ -341,8 +336,34 @@ def smartsamples_dtlz(z,
             if b == c: new = b
             else:                
                 new = a + random.uniform(b,c)
+                if new > max(R):
+                    new = min(R) + (new - max(R))
+                    #sanity check
+                    if new > max(R):
+                        new = min(R) + (new - max(R))
+            row.append(round(new,2))
+        for i in diffs:
+            fea = i[0]
+            cond = i[1]
+            thresh = i[2]
+            R = MODEL[model[:-1]]
+            if cond:
+                val = random.uniform(min(R),thresh)
+            else:
+                val = random.uniform(thresh,max(R))
+            fi = colname[z].index(fea)
+            row[fi] = round(val,2)
+        rows.append(row)
 
-        
+    from dtlzd import Os
+    znew = z + 'gened'
+    header = indep[main]
+    next_dtlz = Os(args['m'],args['objind'])
+    rows = next_dtlz.runner(rows)
+    reader.makeTable(colname[main],znew)
+    for r in rows: reader.addRow(r,znew)
+    sys.stderr.write("# Table " + znew + " created\n")
+    return znew
 
 def genwithrange(z,
                  ranges,

@@ -166,7 +166,6 @@ def wrbranch(bname,Tname,nodes,leaves):
 def retreivemqws(colstats,objectives):
     m,q,w,s = 'm','q','w','s'
     mqws = {m:[], q:[], w:[], s:[]}
-    print colstats
     for _i in [m,q,w,s]:
         for _o in objectives:
             mqws[_i].append(colstats[_o][_i])

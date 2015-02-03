@@ -52,7 +52,7 @@ def tshortener(z,zlst,colname,data,dep,indep,patt=1.0,discretize=True):
         outcols.append(vals[i].name)
     zshort = 'shortenedz'
     outcols = [i for i in colname[z] if i in outcols]
-    print outcols,"#infogained"
+    print outcols,len(outcols),"#infogained"
     #Convert outcols to discrete attributes
     if discretize:
         #outcols = [c[1:] for c in outcols]

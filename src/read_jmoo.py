@@ -43,25 +43,25 @@ def jmoo_pom(jm):
         mqws[_k] = { key: mqw[key] for key in _mqw}
     return buildEs(mqws,objectives,Tname='jmoo'),avggens
 
-def moea_dtlz(z):
-    pop = indepdata(z)
+def moea_dtlz(z,pop):
     _deps = len(dep[z])
     from moea import Moea
     _moea = Moea(indeps=len(indep[z]),
-                 deps=len(dep[z]))
-    pop = _moea.loadPopulation(pop)
+                 deps=len(dep[z]),
+                 pop=pop)
 
     mqws,gens = [], []
     for r in range(args['repeats']):
         sys.stderr.write("# Repeating NSGAII "+str(r)+" th time\n")
+        pop = _moea.loadPopulation()
         pop,logbook = _moea.runNSGAII(pop)
         #get last generation's mqw
         _lastlog = logbook[-1]
-        m,q,w = 'm','q','w'
-        _mqw = {m:[], q:[], w:[]}
+        m,q,w,s = 'm','q','w','s'
+        _mqw = {m:[], q:[], w:[], s:[]}
         _mqw[m] = list(_lastlog['med'])
         _mqw[w] = list(_lastlog['max'])
-    
+        _mqw[s] = list(_lastlog['min'])
         #for mqws[q]
         deps = []
         for _d in range(_deps):

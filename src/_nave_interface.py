@@ -130,6 +130,7 @@ class Interface:
             for r in rows: reader.addRow(r,z)
             
 
+
         #Default Configuration
         args['l'] = 0.5*N #leaf size
         args['n'] = -1 #Use all
@@ -173,6 +174,7 @@ class Interface:
         self.callrunner(Tname,z,args,esdash,
                         totalsize,objectives)
         """
+
         #NSGA
         if self.prob in POMPROB:
 
@@ -212,7 +214,7 @@ class Interface:
             print ">>>>>"*10,Tname,"<<<<<"*10
             self.starttime[Tname] = time.time()
             totalsize[Tname] = args['repeats']
-            esdash[Tname],avggens = moea_dtlz(z)
+            esdash[Tname],avggens = moea_dtlz(z,self.pop)
             self.endtime[Tname] = time.time()
             self.writefile(Tname,[-1,-1],avggens=avggens)
 

@@ -46,7 +46,7 @@ class Os:
         self.ind = objind[1]
         if names: self.names = names
         else:
-            self.names = ['ind'+str(i) for i in range(self.ind)]
+            self.names = ['$ind'+str(i) for i in range(self.ind)]
         self.LOWS = [DTLZ_LOW for _ in self.names]
         self.UPS  = [DTLZ_UP for _ in self.names]
         for _n,n in enumerate(self.names):
@@ -78,6 +78,11 @@ class Os:
             rows.append(inp[i]+self.modelFunction(inp[i],self.obj)) 
         header = self.names + ['-obj'+str(i) for i in range(self.obj)]
         return header,rows
+
+    def runner(self,rows):
+        for i,r in enumerate(rows):
+            rows[i] += [round(i,2) for i in self.modelFunction(r,self.obj)]
+        return rows
 
     def __str__(self):
         return 'dtlz'+str(self.model)+":"+str(self.ind)\

@@ -33,7 +33,7 @@ args = {'v' : -1,                      #Verbose
         'bpop': 1000,                  #bootstrap population
         'fayyad': False,               #fayyad disc check
         'objind' : (-1,-1),            #num of deps and indeps for dtlz
-        'repeats': 1,                 #total no of times experi is done
+        'repeats': 20,                 #total no of times experi is done
         'gens': 1                      #number of gens from wicked 
         }
 #
@@ -89,7 +89,10 @@ mre = {}
 buckets = {}
 
 #Model ranges
-MODEL = { "pom3A": 
+MODEL = { 
+          "dtlz": (0,1),
+
+          "pom3A": 
           {
               "LOWS" : [0.1, 0.82, 2,  0.40, 1,   1,  0, 0, 1],
               "UPS"  : [0.9, 1.20, 10, 0.70, 100, 50, 4, 5, 44]
@@ -104,6 +107,7 @@ MODEL = { "pom3A":
               "LOWS" : [0.50, 0.82, 2, 0.20, 0,  40, 2, 0, 20],
               "UPS"  : [0.90, 1.26, 8, 0.50, 50, 50, 4, 5, 44]
           },
+
           "xomogeneric": 
           {     "aa" : (1,6),
                 "sced" : (1.00,1.43), 

@@ -18,10 +18,10 @@ from deap import tools
 
 
 class Moea:
-    def __init__(self,indeps,deps,name='nsga'):
+    def __init__(self,indeps,deps,pop=100,name='nsga'):
 
-        self.MAXGEN = 250
-        self.MU = 100
+        self.MAXGEN = 10
+        self.MU = pop
         self.CXPB = 0.9
 
         self.low = 0.0
@@ -66,7 +66,8 @@ class Moea:
         else:
             for _ in range(self.MU):
                 p = creator.Individual()
-                p.fromlist(uniform(self.low,self.hi,self.indeps))
+                i = uniform(self.low,self.hi,self.indeps)
+                p.fromlist(i)
                 pop.append(p)
 
         return pop
@@ -149,12 +150,13 @@ class Moea:
         return pop, logbook
         
 if __name__ == "__main__":
+    """
     with open("dtlz1_front.json") as optimal_front_data:
         optimal_front = json.load(optimal_front_data)
     # Use 500 of the 1000 points in the json file
     optimal_front = sorted(optimal_front[i] for i in range(0, len(optimal_front), 2))
-
-    moea = Moea(indeps=5,deps=2)
+    """
+    moea = Moea(indeps=20,deps=2)
     pop = moea.loadPopulation()
     pop, stats = moea.runNSGAII(pop)
     pop.sort(key=lambda x: x.fitness.values)
