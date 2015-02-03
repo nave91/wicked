@@ -269,7 +269,7 @@ def smartsamples_xomo(z,
             R = MODEL["xomogeneric"][fea]
         return R
     
-    for i in range(n):
+    for i in range(n*100):
         row = []
         #smart sample all
         for fea in indep[main]+['+kloc']:
