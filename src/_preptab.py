@@ -182,8 +182,8 @@ def learn(z,st,nodleas,base=False):
         Diffs,betters,zlst,branches = diff(zshort,args)
         endtime = time.time() - st
         from gen import genwithdiffs,smartsamples
-        #T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
-        T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
+        T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
+        #T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
         nodes += branches.nodes
         leaves += branches.leaves
     elif not base:
@@ -191,8 +191,8 @@ def learn(z,st,nodleas,base=False):
         Diffs,betters,zlst,branches = diff(z,args)
         endtime = time.time() - st
         from gen import genwithdiffs,smartsamples
-        #T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
-        T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
+        T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
+        #T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
         nodes += branches.nodes
         leaves += branches.leaves
     else:
@@ -228,7 +228,7 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False,read=False):
 
             es,mqw,endtime,nodleas,newrows = learn(z,st,
                                                    nodleas,base=base)
-        
+            """
             reader.makeTable(colname[z],zout)
             for r in newrows:
                 reader.addRow(r,zout)
@@ -236,7 +236,7 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False,read=False):
             reader.removeTable(z)
             reader.copyTable(zout,z)
             reader.removeTable(zout)
-
+            """
             #Clean everything up 
             for key,value in data.items():
                 if key not in [z,zout]: 

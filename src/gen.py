@@ -102,6 +102,7 @@ def genwithdiffs_xomo(z,
     sys.stderr.write("# Table " + znew + " created\n")
     if write: sys.stderr.write("# see" + out + "\n")
     if write: reader.readCsv(open(out,'r'),znew)
+    
     return znew
 
 def genwithdiffs_pom(z,
@@ -143,7 +144,6 @@ def genwithdiffs_dtlz(z,
         fea = i[0]
         cond = i[1]
         thresh = i[2]
-        fea = clearsymbols(fea)
         os.update(fea,cond,thresh)
         if verbose:
             print "Sample of 5"
