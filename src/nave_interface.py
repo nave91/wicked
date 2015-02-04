@@ -4,9 +4,9 @@ import sys
 import reader
 
 ALGOS = ["CT"]
-PROBS = ["dtlz1"]#["pom3A","pom3B","pom3C"]#["xomofl","xomogr","xomoos","xomoo2","xomoal"]#
+PROBS = ["dtlz1","dtlz2","dtlz3"]#["pom3A","pom3B","pom3C"]#["xomofl","xomogr","xomoos","xomoo2","xomoal"]#
 POPS = [500]#[100,200,300,400,500]
-INDS = [20]#,40,60,80]
+INDS = [10,20,40]
 OBJS = [2]
 
 if len(sys.argv) > 1:

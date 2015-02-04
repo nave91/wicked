@@ -20,7 +20,7 @@ from deap import tools
 class Moea:
     def __init__(self,indeps,deps,pop=100,name='nsga'):
 
-        self.MAXGEN = 10
+        self.MAXGEN = 50
         self.MU = pop
         self.CXPB = 0.9
 
