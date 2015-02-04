@@ -1,0 +1,11 @@
+\begin{tabular}{|l@{~}c@{~}c@{~}r|}
+\arrayrulecolor{lightgray}
+\rowcolor[gray]{0.85}   & Rx & Median & \\ 
+\hline\rowcolor[gray]{1.0} obj0  & 0 & 48 & \quart{25.0}{43.0}{48.0} \\ 
+ & W & 37 & \quart{20.0}{34.0}{37.0} \\ 
+ & N & 1 & \quart{0.0}{1.0}{1.0} \\ 
+\hline\rowcolor[gray]{1.0} obj1  & 0 & 49 & \quart{26.0}{43.0}{49.0} \\ 
+ & W & 34 & \quart{17.0}{34.0}{34.0} \\ 
+ & N & 0 & \quart{0.0}{1.0}{0.0} \\ 
+\end{tabular}
+
