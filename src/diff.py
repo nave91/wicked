@@ -253,7 +253,7 @@ def diff(z,args,model=args['m'],verbose=False,checkeach=False):
                     C2wced = mutate(C2diffs,wcluster,appender) #before mutated
                     majclass_samples = branches.collection[wbid].samples
 
-                    Diffs.append(Diff(C2wced,C2diffs,majclass_samples*100))
+                    Diffs.append(Diff(C2wced,C2diffs,majclass_samples))
 
     return Diffs,betters,zlst,branches
 

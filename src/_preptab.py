@@ -1,4 +1,5 @@
 import time
+import copy
 import properties,reader,xy_proj
 from lib import *
 from diff import diff
@@ -182,8 +183,8 @@ def learn(z,st,nodleas,base=False):
         Diffs,betters,zlst,branches = diff(zshort,args)
         endtime = time.time() - st
         from gen import genwithdiffs,smartsamples
-        T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
-        #T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
+        #T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
+        T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
         nodes += branches.nodes
         leaves += branches.leaves
     elif not base:
@@ -191,8 +192,8 @@ def learn(z,st,nodleas,base=False):
         Diffs,betters,zlst,branches = diff(z,args)
         endtime = time.time() - st
         from gen import genwithdiffs,smartsamples
-        T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
-        #T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
+        #T3zlst = genwithdiffs(Diffs,betters,args['m'],verbose=False)
+        T3zlst = smartsamples(Diffs,betters,args['m'],verbose=False)
         nodes += branches.nodes
         leaves += branches.leaves
     else:
@@ -208,7 +209,24 @@ def learn(z,st,nodleas,base=False):
     for i in T3zlst:
         newrows += data[i]
     
-    return es,mqw,endtime,(nodes,leaves),newrows
+
+    return es,endtime,(nodes,leaves),newrows
+
+
+
+def bstop(meds,lives):
+    if len(meds) < lives:
+        return False
+    else:
+        l = 1
+        while l < lives:
+            #_l is index from last of logbook
+            #if any of objectives are increasing
+            if any([i>j for i,j in zip(meds[-l],meds[-l-1])]):
+                return False
+            else:
+                l += 1
+        return True
 
 def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False,read=False):
     mqws = []
@@ -216,27 +234,42 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False,read=False):
     endtimes = []
     _st = time.time()
     _r = 0
-    
+    meds = []
     while _r < args['repeats']:
         _g = 0
         if not read:
             sys.stderr.write("# loading population.\n")
-            objectives = loadPopulation(z,args,pop)
+            objectives,_ = loadPopulation(z,args,pop)
         while _g < args['gens']:
             resetSeed(_r)
             st = time.time()
 
-            es,mqw,endtime,nodleas,newrows = learn(z,st,
+            es,endtime,nodleas,newrows = learn(z,st,
                                                    nodleas,base=base)
-            """
+            
             reader.makeTable(colname[z],zout)
+
+            
+            colstats = es.calc(len(newrows))
+            mqw = retreivemqws(colstats,objectives)
+            
+            if len(newrows) < pop:
+                _,rows = loadPopulation(z,args,int(pop-len(newrows)))
+                newrows += rows
+                
             for r in newrows:
                 reader.addRow(r,zout)
+
             
+            meds.append(mqw['m'])
+
+            stop = bstop(meds,3)
+            print meds,stop,"#"*10
+    
             reader.removeTable(z)
             reader.copyTable(zout,z)
             reader.removeTable(zout)
-            """
+            
             #Clean everything up 
             for key,value in data.items():
                 if key not in [z,zout]: 
@@ -246,8 +279,6 @@ def runner(z,args,esdash,totalsize,Tname,objectives,pop,base=False,read=False):
 
         
         # calculate es
-        colstats = es.calc(len(newrows))
-        mqw = retreivemqws(colstats,objectives)
         mqws.append(mqw)
         endtimes.append(endtime)
 
@@ -303,7 +334,7 @@ def loadPopulation(z,args,pop):
         for r in rows:
             reader.addRow(r,z)
         objectives = [i for i in header[-args['objind'][0]:]]
-    return objectives
+    return objectives,rows
             
 def ct_storeinfile(fname,output):
     sys.stderr.write("#writing into file "+fname+"\n")

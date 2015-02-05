@@ -20,7 +20,7 @@ from deap import tools
 class Moea:
     def __init__(self,indeps,deps,pop=100,name='nsga'):
 
-        self.MAXGEN = 50
+        self.MAXGEN = 5
         self.MU = pop
         self.CXPB = 0.9
 
@@ -81,7 +81,7 @@ class Moea:
             while _l < lives:
                 #_l is index from last of logbook
                 #if any of objectives are increasing
-                if any(logbook[-_l]['med'] < logbook[-_l-1]['med']):
+                if any([i>j for i,j in zip(logbook[-_l]['med'],logbook[-_l-1]['med'])]):
                     return False
                 else:
                     _l += 1
@@ -119,7 +119,7 @@ class Moea:
 
         gen,stop = 1,False
         # Begin the generational process
-        while (gen < self.MAXGEN) and not stop:
+        while (gen < self.MAXGEN):# and not stop:
             # Vary the population
             offspring = tools.selTournamentDCD(pop, len(pop))
             offspring = [self.toolbox.clone(ind) for ind in offspring]
@@ -147,6 +147,7 @@ class Moea:
             logbook.record(gen=gen, evals=len(invalid_ind), **record)
             stop = self.bstop(logbook,2)
             gen += 1
+        print gen
         return pop, logbook
         
 if __name__ == "__main__":
